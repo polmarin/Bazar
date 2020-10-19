@@ -23,7 +23,7 @@ class Product(db.Model):
 
 class Price(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    asin = db.Column(db.Integer, db.ForeignKey('product.asin'),
+    asin = db.Column(db.String(30), db.ForeignKey('product.asin'),
         nullable=False)
     price = db.Column(db.Float, nullable = False)
     date = db.Column(db.DateTime, nullable=False,
