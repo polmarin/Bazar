@@ -2,9 +2,6 @@ from datetime import datetime
 from app import db
 
 class Product(db.Model):
-    # Defines the Table Name user
-    __tablename__ = "Product"
-
     search = db.Column(db.String(100), nullable=False)
     asin = db.Column(db.String(30), nullable=False, primary_key = True)
     link = db.Column(db.String(500), nullable=False)
