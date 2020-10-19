@@ -9,7 +9,7 @@ CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
 
 def get_chrome_web_driver(options):
     try:
-        return webdriver.Chrome(ChromeDriverManager().install(), chrome_options=options)
+        return webdriver.Chrome("chromedriver", chrome_options=options)
     except:
         return webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
         #return webdriver.Chrome(executable_path="/Users/polmarin/Documents/Coding/Python/Flask/buyCheap/app/utils/chromedriver", chrome_options=options)
