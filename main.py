@@ -45,6 +45,7 @@ def search():
                 if product.price <= products[search][-1]:
                     interesting[search].append({"Product" : product, "Last Price" : product.price})
                     found_sth = True
+                db.session.commit()
             else:
                 # PRODUCT ALREADY IN DATABASE
                 update_data_product = Product.query.filter_by(asin = asin).first()
@@ -60,6 +61,7 @@ def search():
                         found_sth = True
                     update_data_product.last_price = product.price
             
+
             new_price = Price(asin, product.price)
             db.session.add(new_price)
 
