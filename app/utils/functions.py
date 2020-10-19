@@ -204,7 +204,7 @@ def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com"):
             html += f"""
                 <td>{product["Product"].name}</td>
                 <td>{product["Product"].prev_price}</td>
-                <td>{product["Last Price"].name}</td>
+                <td>{product["Last Price"]}</td>
                 <td>{product["Product"].price}</td>
             """
         html += """
