@@ -57,7 +57,7 @@ def search():
                     if update_data_product.last_price > product.price:
                         # Price has changed since the last time -> INTERESTING
                         interesting[search].append({"Product" : product, "Last Price" : update_data_product.last_price})
-                        if product.price <= products[search][-1]:
+                        #if product.price <= products[search][-1]:
                             # PRICE < 
                         found_sth = True
                     update_data_product.last_price = product.price
