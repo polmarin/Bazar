@@ -36,8 +36,6 @@ def search():
         for product in products[search][:-1]:
 
             asin = product.asin
-            new_price = Price(asin, product.price)
-            db.session.add(new_price)
             exists = Product.query.filter_by(asin = asin).first() is not None
 
             if not exists: 
@@ -62,6 +60,9 @@ def search():
                         found_sth = True
                     update_data_product.last_price = product.price
             
+            new_price = Price(asin, product.price)
+            db.session.add(new_price)
+
             if cheapest_product.price == "" or cheapest_product.price > product.price:
                 cheapest_product = product
             elif cheapest_product.price == product.price: # Get the one with biggest discount
