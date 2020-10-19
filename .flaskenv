@@ -1,1 +1,1 @@
-FLASK_APP=buycheap.py
+FLASK_APP=bazar.py
