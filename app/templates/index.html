@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form class="form-inline" action="" method="POST">
+    <label>Search</label>
+    <input type="text" id="search" placeholder="Enter Search" name="search">
+    <label>ASIN</label>
+    <input type="text" id="asin" placeholder="Enter ASIN" name="asin">
+    <label>Link</label>
+    <input type="text" id="link" placeholder="Enter Link" name="link">
+    <label>Name</label>
+    <input type="text" id="name" placeholder="Enter Name" name="name">
+    <label>Previous Price</label>
+    <input type="text" id="prev_price" placeholder="Enter Previous Price" name="prev_price">
+    <label>Price</label>
+    <input type="text" id="price" placeholder="Enter Price" name="price">
+    <button type="submit">Submit</button>
+</form>
+
+
+<!-- The table where all the data from the DB will be appeared -->
+
+<table class="data" border="1" style="width: 100%; margin-top: 20px; text-align: center;">
+    <tr>
+        <th colspan="6">Product Data</th>
+    </tr>
+    <tr>
+        <td>Search</td>
+        <td>ASIN</td>
+        <td>Link</td>
+        <td>Name</td>
+        <td>Previous Price</td>
+        <td>Last Price</td>
+    </tr>
+
+    <!-- The user_data is a variable containing all the user data from the DB. -->
+
+    {% for product in product_data %}
+    <tr>
+        <td>{{product.search}}</td>
+        <td>{{product.asin}}</td>
+        <td>{{product.link}}</td>
+        <td>{{product.name}}</td>
+        <td>{{product.prev_price}}</td>
+        <td>{{product.last_price}}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+<table class="data" border="1" style="width: 100%; margin-top: 20px; text-align: center;">
+    <tr>
+        <th colspan="6">Price Data</th>
+    </tr>
+    <tr>
+        <td>ASIN</td>
+        <td>Price</td>
+        <td>Date</td>
+    </tr>
+
+    <!-- The user_data is a variable containing all the user data from the DB. -->
+
+    {% for price in price_data %}
+    <tr>
+        <td>{{price.asin}}</td>
+        <td>{{price.price}}</td>
+        <td>{{price.date}}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+{% endblock %}
