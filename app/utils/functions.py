@@ -191,24 +191,25 @@ def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com"):
         html += f"""
             <br>
             <h2>{search}</h2>
-            <table>
-                <thead>
+            <table style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
+                <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;text-align: center">
                     <th>Name</th>
                     <th>Original Price</th>
                     <th>Last Price</th>
                     <th>Actual Price</th>
-                </thead>
-                <tbody>
+                </tr>
+                
         """
         for product in interesting[search]:
             html += f"""
-                <td>{product["Product"].name}</td>
-                <td>{product["Product"].prev_price}</td>
-                <td>{product["Last Price"]}</td>
-                <td>{product["Product"].price}</td>
+                <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
+                    <td>{product["Product"].name}</td>
+                    <td>{product["Product"].prev_price}€</td>
+                    <td>{product["Last Price"]}€</td>
+                    <td>{product["Product"].price}€</td>
+                </tr>
             """
         html += """
-                </tbody>
             </table>
         """
     html += """
