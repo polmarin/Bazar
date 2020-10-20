@@ -1,32 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
-<style>
-    /*
-*
-* ==========================================
-* FOR DEMO PURPOSES
-* ==========================================
-*
-*/
-
-body {
-  min-height: 100vh;
-  max-width: 100vw;
-  background-color: #FF9900;
-}
-a{
-    color:black;
-}
-a:hover{
-    color: #FF9900;
-    text-transform:none;
-    text-decoration: none;
-}
-</style>
 
 <div class="container py-5">
     <header class="text-center text-white">
@@ -70,18 +44,5 @@ a:hover{
         </div>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-<script>
-    $(function () {
-        $(document).ready(function () {
-            $('#example').DataTable();
-        });
-    });
-</script>
 
 {% endblock %}
