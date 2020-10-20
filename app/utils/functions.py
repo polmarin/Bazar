@@ -190,7 +190,7 @@ def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com"):
     for search in interesting:
         html += f"""
             <br>
-            <h2>{search}</h2>
+            <h2 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF">{search}</h2>
             <table style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
                 <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;text-align: center">
                     <th>Name</th>
@@ -203,7 +203,7 @@ def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com"):
         for product in interesting[search]:
             html += f"""
                 <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
-                    <td>{product["Product"].name}</td>
+                    <td><a href="{product["Product"].link}">{product["Product"].name}</a></td>
                     <td>{product["Product"].prev_price}€</td>
                     <td>{product["Last Price"]}€</td>
                     <td>{product["Product"].price}€</td>

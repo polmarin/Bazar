@@ -2,19 +2,19 @@
 
 <head>
     {% if title %}
-    <title>{{ title }} - microblog</title>
+    <title>{{ title }} - Bazar</title>
     {% else %}
-    <title>microblog</title>
+    <title>Bazar</title>
     {% endif %}
 </head>
 
 <body>
+    <!--
     <div>
-        Microblog:
+        Bazar:
         <a href="{{ url_for('index') }}">Home</a>
-        <!--
-        <a href="{{ url_for('search') }}">Search</a>-->
-    </div>
+        <a href="{{ url_for('search') }}">Search</a>
+    </div>-->
     {% block content %}{% endblock %}
 </body>
 
