@@ -77,6 +77,7 @@ def search():
     if found_sth:
         send_multiple_products_mail(interesting)
     else:
-        send_no_products_mail()
+        pass
+        #send_no_products_mail()
 
 search()
