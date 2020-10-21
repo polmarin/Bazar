@@ -1,4 +1,5 @@
 from datetime import datetime
+import pytz
 from app import db
 
 class Product(db.Model):
@@ -26,12 +27,14 @@ class Price(db.Model):
     asin = db.Column(db.String(30), db.ForeignKey('product.asin'),
         nullable=False)
     price = db.Column(db.Float, nullable = False)
+    default = datetime.now(pytz.timezone("Europe/Madrid"))
     date = db.Column(db.DateTime, nullable=False,
-        default=datetime.now)
+        default=default)
 
-    def __init__(self, asin, price):
+    def __init__(self, asin, price, date):
         self.asin = asin
         self.price = price
+        self.date = date
 
 class Search(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

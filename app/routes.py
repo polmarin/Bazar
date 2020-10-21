@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
 from datetime import datetime
+import pytz
 from .forms import AddSearchForm
 from .models import Product, Price, Search
 from .utils.functions import scraper, send_mail, send_multiple_products_mail, send_no_products_mail, get_best_ones
@@ -14,8 +15,9 @@ def home():
 def index():
     product_data = Product.query.all()
     last = Price.query.order_by(Price.date.desc()).first()
-
-    last_time = int((datetime.now() - last.date).total_seconds() / 60)
+    now = datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None)
+    print(now, last.date)
+    last_time = int((now - last.date).total_seconds() / 60)
 
     # passes user_data variable into the index.html file.
     return render_template("index.html", product_data=product_data, last_time = last_time)
@@ -45,7 +47,7 @@ def search():
             interesting[search] = []
             for product in products[search][:-1]:
                 asin = product.asin
-                new_price = Price(asin, product.price)
+                new_price = Price(asin, product.price, datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None))
                 db.session.add(new_price)
 
                 exists = Product.query.filter_by(asin = asin).first() is not None

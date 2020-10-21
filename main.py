@@ -72,7 +72,7 @@ def search():
                     update_data_product.last_price = product.price
             
 
-            new_price = Price(asin, product.price)
+            new_price = Price(asin, product.price, datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None))
             db.session.add(new_price)
 
             if cheapest_product.price == "" or cheapest_product.price > product.price:
