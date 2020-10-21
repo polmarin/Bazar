@@ -1,5 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
+from datetime import datetime
 from .forms import AddSearchForm
 from .models import Product, Price, Search
 from .utils.functions import scraper, send_mail, send_multiple_products_mail, send_no_products_mail, get_best_ones
@@ -12,10 +13,11 @@ def home():
 @app.route("/", methods=["GET", "POST"])
 def index():
     product_data = Product.query.all()
-    price_data = Price.query.all()
+    last = Price.query.all()[-1]
+    last_time = int((datetime.now() - last.date).total_seconds() / 60)
 
     # passes user_data variable into the index.html file.
-    return render_template("index.html", product_data=product_data, price_data = price_data)
+    return render_template("index.html", product_data=product_data, last_time = last_time)
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
