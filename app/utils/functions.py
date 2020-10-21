@@ -23,11 +23,12 @@ GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google-chrome'
 CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
 """
 
+"""
 searches = [
     ("21:9 monitor", "Monitores", 300),
     ("B006CZ0LGA", "", 27),  # Catan
     ("B083ZJQXB2", "", 140)  # GHD Carla
-]
+]"""
 
 def convert_price_toNumber(price):
     price = price.split("€")[0]
@@ -35,7 +36,7 @@ def convert_price_toNumber(price):
 
     return float(price)
 
-def scraper(d):
+def scraper(d, searches):
 
     URL = "https://www.amazon.es"
     NUMBER_OF_PAGES_TO_SEARCH = 1
@@ -47,7 +48,7 @@ def scraper(d):
     while search:
         #chepest_product = Product("", "", "", "", "")
         #best_deal_product = Product("", "", "", "", "")
-
+        """
         if j < len(searches):
             search_term = searches[j][0]
             MAX_PRICE = searches[j][2]
@@ -56,6 +57,9 @@ def scraper(d):
             search_term = str(input(QUESTION_PRODUCT))
             QUESTION_PRICE = "Which is the highest price you're willing to pay?\n:"
             MAX_PRICE = float(input(QUESTION_PRICE))
+        """
+        search_term = searches[j][0]
+        MAX_PRICE = searches[j][2]
 
         products[search_term] = []
         search_terms = search_term.split(" ")
@@ -73,6 +77,7 @@ def scraper(d):
         element.send_keys(Keys.ENTER)
 
         """ Get departments so the user can choose """
+        """
         departments = driver.find_elements_by_xpath(
             "//div[@id='departments']/ul/li")
         categories = []
@@ -85,6 +90,9 @@ def scraper(d):
             MSG = "Which of these categories is your product in? " + \
                 str(categories)
             category = str(input(MSG))
+        """
+
+        category = searches[j][1]
 
         if category != "":
             categoryElement = driver.find_element_by_xpath(
@@ -148,8 +156,7 @@ def scraper(d):
         products[search_term].append(MAX_PRICE)
         j += 1
 
-        """ FOR HEROKU TO STOP """
-        if j == len(searches):
+        if j >= len(searches):
             search = False
         """
         if j >= len(searches):

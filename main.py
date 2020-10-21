@@ -1,4 +1,4 @@
-from app.models import Product, Price
+from app.models import Product, Price, Search
 from app.utils.functions import scraper, send_mail, send_multiple_products_mail, send_no_products_mail
 from app import app, db
 from app.utils.classes import Product as Prod
@@ -14,7 +14,12 @@ def search():
         else:
             d[product.search][product.asin] = prices[-1].price
 
-    products = scraper(d)
+    search_data = Search.query.all()
+        searches = []
+        for search in search_data:
+            searches.append((search.name, search.category, search.max_price))
+
+    products = scraper(d, searches)
 
     """ UPDATE DATABASE AND FIND INTERESTING PRODUCTS """
     """
