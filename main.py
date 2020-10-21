@@ -18,8 +18,13 @@ def search():
     searches = []
     for search in search_data:
         searches.append((search.name, search.category, search.max_price))
-
-    products = scraper(d, searches)
+    
+    products = {}
+    while products == {}:
+        try:
+            products = scraper(d, searches)
+        except:
+            print("Error, trying to get products again")
 
     """ UPDATE DATABASE AND FIND INTERESTING PRODUCTS """
     """

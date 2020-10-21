@@ -13,7 +13,8 @@ def home():
 @app.route("/", methods=["GET", "POST"])
 def index():
     product_data = Product.query.all()
-    last = Price.query.all()[-1]
+    last = Price.query.order_by(Price.date.desc()).first()
+
     last_time = int((datetime.now() - last.date).total_seconds() / 60)
 
     # passes user_data variable into the index.html file.

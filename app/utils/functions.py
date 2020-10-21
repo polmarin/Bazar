@@ -93,7 +93,7 @@ def scraper(d, searches):
         """
 
         category = searches[j][1]
-
+        time.sleep(1)
         if category != "":
             categoryElement = driver.find_element_by_xpath(
                 "//div[@id='departments']/ul/li/span/a/span[contains(text(), '" + category + "')]")
