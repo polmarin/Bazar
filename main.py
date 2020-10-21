@@ -15,9 +15,9 @@ def search():
             d[product.search][product.asin] = prices[-1].price
 
     search_data = Search.query.all()
-        searches = []
-        for search in search_data:
-            searches.append((search.name, search.category, search.max_price))
+    searches = []
+    for search in search_data:
+        searches.append((search.name, search.category, search.max_price))
 
     products = scraper(d, searches)
 
