@@ -1,6 +1,8 @@
 from app.models import Product, Price, Search
 from app.utils.functions import scraper, send_mail, send_multiple_products_mail, send_no_products_mail
 from app import app, db
+from datetime import datetime
+import pytz
 from app.utils.classes import Product as Prod
 
 def search():
