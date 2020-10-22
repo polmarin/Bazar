@@ -5,6 +5,8 @@ from datetime import datetime
 import pytz
 from app.utils.classes import Product as Prod
 
+print("Hi")
+
 def search():
     """ GET STORED PRODUCTS """
     product_data = Product.query.all()
