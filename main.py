@@ -16,6 +16,7 @@ def search():
         else:
             d[product.search][product.asin] = prices[-1].price
 
+    """ GET STORED SEARCH TERMS """
     search_data = Search.query.all()
     searches = []
     for search in search_data:
@@ -84,7 +85,7 @@ def search():
                     cheapest_product = product
 
             
-    db.session.commit()
+        db.session.commit()
 
     if found_sth:
         send_multiple_products_mail(interesting)
