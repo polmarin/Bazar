@@ -44,9 +44,9 @@ def search():
     for search in products:
 
         interesting[search] = []
-        cheapest_product = Prod("", "", "", "", "")
-        best_deal_product = Prod("", "", "", "", "")
-        best_deal_affordable_product = Prod("", "", "", "", "")
+        cheapest_product = Prod("", "", "", "", "", "")
+        best_deal_product = Prod("", "", "", "", "", "")
+        best_deal_affordable_product = Prod("", "", "", "", "", "")
 
         for product in products[search][:-1]:
 
