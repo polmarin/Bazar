@@ -36,6 +36,15 @@ def convert_price_toNumber(price):
 
     return float(price)
 
+def prettify_rating(rating):
+    """
+        rating is always like: X,Y de Z estrellas (or it can be an empty string)
+    """
+    if rating != "":
+        rating = rating.split(" de ")[0] # X,Y
+        rating = float(rating.replace(",", "."))
+    return rating
+
 def scraper(d, searches):
 
     URL = "https://www.amazon.es"
@@ -118,6 +127,13 @@ def scraper(d, searches):
             price = prod.find('span', {'class': 'a-price'})
             prev_price = prod.find('span', {'class': 'a-price a-text-price'})
             try:
+                rating = prod.find('div', {'class' : 'a-section a-spacing-none a-spacing-top-micro'}).find('div', {'class' : 'a-row a-size-small'}).find('span').get('aria-label')
+            except:
+                rating = ""
+            
+            rating = prettify_rating(rating)
+
+            try:
                 if prev_price is None:
                     prev_price = price
 
@@ -131,7 +147,8 @@ def scraper(d, searches):
                     name, 
                     convert_price_toNumber(price), 
                     convert_price_toNumber(prev_price), 
-                    link
+                    link,
+                    rating
                 )
 
                 if searches[j][0] != asin:  # If the search term isn't the ASIN

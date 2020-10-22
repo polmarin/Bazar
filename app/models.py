@@ -9,15 +9,17 @@ class Product(db.Model):
     name = db.Column(db.String(200), nullable=False)
     prev_price = db.Column(db.Float, nullable=False)
     last_price = db.Column(db.Float, nullable = False)
+    rating = db.Column(db.Float, nullable = True)
 
     # A constructor function where we will pass the name and email of a user and it gets add as a new entry in the table.
-    def __init__(self, search, asin, link, name, prev_price, price):
+    def __init__(self, search, asin, link, name, prev_price, price, rating):
         self.search = search
         self.asin = asin
         self.link = link
         self.name = name
         self.prev_price = prev_price
         self.last_price = price
+        self.rating = rating
 
     def __repr__(self):
         return '<Product {}>'.format(self.asin)

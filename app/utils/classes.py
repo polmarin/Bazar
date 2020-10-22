@@ -1,10 +1,11 @@
 class Product:
-    def __init__(self, asin, name, price, prev_price, link):
+    def __init__(self, asin, name, price, prev_price, link, rating):
         self.asin = asin
         self.name = name
         self.price = price
         self.prev_price = prev_price
         self.link = link
+        self.rating = rating
 
     def __str__(self):
         msg = "ASIN: " + self.asin + "\n"
@@ -28,3 +29,4 @@ class Product:
         self.price = json_["price"]
         self.prev_price = json_["prev_price"]
         self.link = json_["link"]
+        self.rating = json_["rating"]

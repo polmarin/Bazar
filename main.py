@@ -53,7 +53,7 @@ def search():
 
             if not exists: 
                 # PRODUCT NOT IN DATABASE
-                new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price)
+                new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price, product.rating)
                 db.session.add(new_product)
                 if product.price <= products[search][-1]:
                     interesting[search].append({"Product" : product, "Last Price" : product.price})
@@ -64,6 +64,7 @@ def search():
                 update_data_product = Product.query.filter_by(asin = asin).first()
                 update_data_product.link = product.link
                 update_data_product.name = product.name
+                update_data_product.rating = product.rating
                 if update_data_product.last_price != product.price:
                     # OJO, nou preu -> Tractarho com vulguis
                     if update_data_product.last_price > product.price:

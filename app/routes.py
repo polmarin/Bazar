@@ -16,7 +16,6 @@ def index():
     product_data = Product.query.all()
     last = Price.query.order_by(Price.date.desc()).first()
     now = datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None)
-    print(now, last.date)
     last_time = int((now - last.date).total_seconds() / 60)
 
     # passes user_data variable into the index.html file.
@@ -52,7 +51,7 @@ def search():
 
                 exists = Product.query.filter_by(asin = asin).first() is not None
                 if not exists:
-                    new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price)
+                    new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price, product.rating)
                     db.session.add(new_product)
                     if product.price <= products[search][-1]:
                         interesting[search].append({"Product" : product, "Last Price" : product.price})
