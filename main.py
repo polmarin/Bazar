@@ -1,5 +1,5 @@
 from app.models import Product, Price, Search
-from app.utils.functions import scraper, send_mail, send_multiple_products_mail, send_no_products_mail
+from app.utils.functions import scraper, send_mail, send_multiple_products_mail, send_no_products_mail, get_interesting
 from app import app, db
 from datetime import datetime
 import pytz
@@ -24,6 +24,7 @@ def search():
     for search in search_data:
         searches.append((search.name, search.category, search.max_price))
     
+    """ SCRAPE DATA """
     products = {}
     while products == {}:
         try:
@@ -31,23 +32,8 @@ def search():
         except:
             print("Error, trying to get products again")
 
-    """ UPDATE DATABASE AND FIND INTERESTING PRODUCTS """
-    """
-        Which are the interesting products?
-        - That below the max amount with the biggest sale
-        - That one with the biggest sale overall 
-        - Those that changed their price since the last time -> DONE
-        - Cheapest -> DONE
-    """
-    interesting = {}
-    found_sth = False
+    """ UPDATE DATABASE """
     for search in products:
-
-        interesting[search] = []
-        cheapest_product = Prod("", "", "", "", "", "")
-        best_deal_product = Prod("", "", "", "", "", "")
-        best_deal_affordable_product = Prod("", "", "", "", "", "")
-
         for product in products[search][:-1]:
 
             asin = product.asin
@@ -55,11 +41,11 @@ def search():
 
             if not exists: 
                 # PRODUCT NOT IN DATABASE
-                new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price, product.rating)
+                if product.rating != "":
+                    new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price, product.rating)
+                else:
+                    new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price)
                 db.session.add(new_product)
-                if product.price <= products[search][-1]:
-                    interesting[search].append({"Product" : product, "Last Price" : product.price})
-                    found_sth = True
                 db.session.commit()
             else:
                 # PRODUCT ALREADY IN DATABASE
@@ -67,33 +53,19 @@ def search():
                 update_data_product.link = product.link
                 update_data_product.name = product.name
                 update_data_product.rating = product.rating
-                if update_data_product.last_price != product.price:
-                    # OJO, nou preu -> Tractarho com vulguis
-                    if update_data_product.last_price > product.price:
-                        # Price has changed since the last time -> INTERESTING
-                        interesting[search].append({"Product" : product, "Last Price" : update_data_product.last_price})
-                        #if product.price <= products[search][-1]:
-                            # PRICE < 
-                        found_sth = True
-                    update_data_product.last_price = product.price
+                update_data_product.last_price = product.price
             
 
             new_price = Price(asin, product.price, datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None))
             db.session.add(new_price)
-
-            if cheapest_product.price == "" or cheapest_product.price > product.price:
-                cheapest_product = product
-            elif cheapest_product.price == product.price: # Get the one with biggest discount
-                if cheapest_product.prev_price < product.prev_price:
-                    cheapest_product = product
-
-            
         db.session.commit()
 
-    if found_sth:
-        send_multiple_products_mail(interesting)
-    else:
-        pass
-        #send_no_products_mail()
+
+    product_data = Product.query.all()
+    price_data = Price.query.all()
+    searches = Search.query.all()
+    interesting = get_interesting(product_data, price_data, searches)
+    #print(interesting)
+    #send_multiple_products_mail(interesting)
 
 search()

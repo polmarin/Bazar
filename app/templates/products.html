@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="py-5">
+    <header class="container text-center text-white">
+        <h1 class="display-4">BAZAR</h1>
+        <p class="lead mb-0">
+            There are different products that I want to buy, but not at any price. That is why I have created this web-app, which periodically
+            goes through a set of Amazon products that are of my interest and sends me an email when there are some worth considering.<br>
+            Here below you'll find a table with all the stored products
+        </p>
+    </header>
+    <div class="row py-5">
+        <div class="col-lg-10 col-10 mx-auto">
+            <div class="card rounded shadow border-0">
+                <div class="card-body p-5 bg-white rounded">
+                    <div class="table-responsive">
+                        <table id="example" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <!--
+                                    <th>Search</th>
+                                    <th>ASIN</th>-->
+                                    <th>Name</th>
+                                    <th>Rating</th>
+                                    <th>Original Price</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in product_data %}
+                                <tr>
+                                    <!--
+                                    <td>{{product.search}}</td>
+                                    <td>{{product.asin}}</td>-->
+                                    <td><a href="{{product.link}}" target="_blank">{{product.name}}</a></td>
+                                    <td style="text-align:center">{{product.rating}}/5</td>
+                                    <td>{{product.prev_price}}€</td>
+                                    <td>{{product.last_price}}€</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="text-align:right">
+                        <p style="text-align:right">Last Update: {{last_time}} minutes ago</p>
+                        <p style="text-align:right">Price entries: {{num_prices}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

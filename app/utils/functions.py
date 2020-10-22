@@ -198,7 +198,7 @@ def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com"):
     you = mail
 
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = "TENIM PRODUCTES INTERESSANTS"
+    msg['Subject'] = "Today's most interesting products"
     msg['From'] = me
     msg['To'] = you
 
@@ -209,33 +209,37 @@ def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com"):
         </head>
         <body style="background-color: #101820FF;padding: 20px 10px; text-align:center">
             <div style="max-width:800px; margin:0 auto; text-align:center; font;color: #FEE715FF">
-                <h1 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF;text-align:center">Hem trobat diferents productes interessants</h1>"""
+                <h1 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF;text-align:center">Today's <i>juiciest</i></h1>"""
 
     for search in interesting:
         html += f"""
-            <br>
-            <h2 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF">{search}</h2>
-            <table style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
-                <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;text-align: center">
-                    <th>Name</th>
-                    <th>Original Price</th>
-                    <th>Last Price</th>
-                    <th>Actual Price</th>
-                </tr>
-                
+                <br>
+                <h2 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF">{search}</h2>
         """
-        for product in interesting[search]:
+        for n in interesting[search]:
             html += f"""
-                <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
-                    <td><a href="{product["Product"].link}">{product["Product"].name}</a></td>
-                    <td>{product["Product"].prev_price}€</td>
-                    <td>{product["Last Price"]}€</td>
-                    <td>{product["Product"].price}€</td>
-                </tr>
+                <h3 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF;margin-bottom:10px">{n}</h3>
+                <table style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
+                    <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;text-align: center">
+                        <th>Name</th>
+                        <th>Rating</th>
+                        <th>Original Price</th>
+                        <th>Actual Price</th>
+                    </tr>
+                    
             """
-        html += """
-            </table>
-        """
+            for product in interesting[search][n]:
+                html += f"""
+                    <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
+                        <td><a href="{product.link}">{product.name}</a></td>
+                        <td>{product.rating}</td>
+                        <td>{product.prev_price}€</td>
+                        <td>{product.last_price}€</td>
+                    </tr>
+                """
+            html += """
+                </table>
+            """
     html += """
             </div>
         </body>
@@ -329,17 +333,83 @@ def send_mail(link, mail="12polmarin12@gmail.com", d_info = {}):
     server.quit()
     print("Sent")
 
-def get_best_ones(product_data):
+def get_interesting(product_data, price_data, searches):
     """
     Which are the best products?
+        - The cheapest one
         - That below the max amount with the biggest sale
         - That one with the biggest sale overall
-        - 
+        - Products that have lowered their price in the last 24 hours
+        - Those with the best ratings (always above 4 out of 5 stars)
+
+
+        products = {
+            search : {
+                "Cheapest" : prod,
+                "Affordable biggest sales": [prods], # 3? 5?
+                "Biggest sale" : prod,
+                "Last sales" : [prods], # all
+                "Affordable Best Rated" : [prods] # 3? 5?
+            }
+        }
     """
-    products = {} # dict {cat, [products]}
-    for product in product_data:
-        if product.search not in products:
-            products[product.search] = product
+    products = {}
+    for search in searches:
+        name = search.name
+        max_price = search.max_price
+
+        i = 0
+        biggest_sales = [] # Order in the end
+        last_sales = []
+        best_rated = []
+        single_product = False
+        for product in product_data:
+            if product.search == name and product.asin != name:
+                if i == 0:
+                    cheapest = product
+                    biggest = product
+                else:
+                    if product.last_price < cheapest.last_price:
+                        cheapest = product 
+                    if (product.prev_price - product.last_price) > (biggest.prev_price - biggest.last_price):
+                        biggest = product
+                if (product.prev_price - product.last_price) > 0 and product.last_price <= max_price:
+                    biggest_sales.append(product)
+                prices = []
+                for price in price_data:
+                    if price.asin == product.asin:
+                        prices.append(price)
+
+                if len(prices) >= 24:
+                    if prices[-3].price > prices[-1].price: # Change to -24
+                        last_sales.append(product)
+                else:
+                    if prices[0].price > prices[-1].price:
+                        last_sales.append(product)
+                if product.rating >= 4 and product.last_price <= max_price:
+                    best_rated.append(product)
+
+            elif product.asin == name:
+                single_product = True
+                cheapest = product
+                break
+
+            i += 1
+
+        if not single_product:
+            biggest_sales.sort(key=lambda x: (x.last_price - x.prev_price), reverse=True)
+            #last_sales.sort(key=lambda x: x.last_price, reverse=True)
+            best_rated.sort(key=lambda x: x.rating, reverse=True)
+            products[name] = {
+                "Cheapest" : [cheapest],
+                "Biggest Affordable Sales" : biggest_sales[:4],
+                "Biggest Sale" : [biggest],
+                "Last Sales" : last_sales,
+                "Affordable Top Rated" : best_rated[:4]
+            }
         else:
-            pass
-            #if products[product.search].last_price < 
+            products[cheapest.name] = {
+                "" : [cheapest]
+            }
+    return products
+

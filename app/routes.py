@@ -4,7 +4,7 @@ from datetime import datetime
 import pytz
 from .forms import AddSearchForm
 from .models import Product, Price, Search
-from .utils.functions import scraper, send_mail, send_multiple_products_mail, send_no_products_mail, get_best_ones
+from .utils.functions import scraper, send_mail, send_multiple_products_mail, send_no_products_mail, get_interesting 
 
 @app.route("/index")
 def home():
@@ -14,12 +14,28 @@ def home():
 @app.route("/", methods=["GET", "POST"])
 def index():
     product_data = Product.query.all()
+    price_data = Price.query.all()
+    searches = Search.query.all()
     last = Price.query.order_by(Price.date.desc()).first()
     now = datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None)
     last_time = int((now - last.date).total_seconds() / 60)
 
+    interesting = get_interesting(product_data, price_data, searches)
+
     # passes user_data variable into the index.html file.
-    return render_template("index.html", product_data=product_data, last_time = last_time)
+    #return render_template("index.html", product_data=product_data, last_time = last_time)
+    return render_template("index.html", interesting=interesting, last_time = last_time)
+
+
+@app.route("/all-products")
+def show_all():
+    product_data = Product.query.all()
+    last = Price.query.order_by(Price.date.desc()).first()
+    now = datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None)
+    last_time = int((now - last.date).total_seconds() / 60)
+    num_prices = len(Price.query.all())
+
+    return render_template("products.html", product_data=product_data, last_time = last_time, num_prices = num_prices)
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
@@ -38,40 +54,49 @@ def search():
         for search in search_data:
             searches.append((search.name, search.category, search.max_price))
 
-        products = scraper(d, searches)
+        """ SCRAPE DATA """
+        products = {}
+        while products == {}:
+            try:
+                products = scraper(d, searches)
+            except:
+                print("Error, trying to get products again")
 
-        interesting = {}
-        found_sth = False
+        """ UPDATE DATABASE """
         for search in products:
-            interesting[search] = []
             for product in products[search][:-1]:
+
                 asin = product.asin
+                exists = Product.query.filter_by(asin = asin).first() is not None
+
+                if not exists: 
+                    # PRODUCT NOT IN DATABASE
+                    if product.rating != "":
+                        new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price, product.rating)
+                    else:
+                        new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price)
+                    db.session.add(new_product)
+                    db.session.commit()
+                else:
+                    # PRODUCT ALREADY IN DATABASE
+                    update_data_product = Product.query.filter_by(asin = asin).first()
+                    update_data_product.link = product.link
+                    update_data_product.name = product.name
+                    update_data_product.rating = product.rating
+                    update_data_product.last_price = product.price
+                
+
                 new_price = Price(asin, product.price, datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None))
                 db.session.add(new_price)
+            db.session.commit()
 
-                exists = Product.query.filter_by(asin = asin).first() is not None
-                if not exists:
-                    new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price, product.rating)
-                    db.session.add(new_product)
-                    if product.price <= products[search][-1]:
-                        interesting[search].append({"Product" : product, "Last Price" : product.price})
-                        found_sth = True
-                else:
-                    update_data_product = Product.query.filter_by(asin = asin).first()
-                    # SHOULD WE UPDATE OTHER VALUES LIKE NAME AND LINK?
-                    if update_data_product.last_price != product.price:
-                        # OJO, nou preu -> Tractarho com vulguis
-                        if update_data_product.last_price > product.price and product.price <= products[search][-1]:
-                            interesting[search].append({"Product" : product, "Last Price" : update_data_product.last_price})
-                            found_sth = True
-                        update_data_product.last_price = product.price
-                
-        db.session.commit()
 
-        if found_sth:
-            send_multiple_products_mail(interesting)
-        else:
-            send_no_products_mail()
+        product_data = Product.query.all()
+        price_data = Price.query.all()
+        searches = Search.query.all()
+        interesting = get_interesting(product_data, price_data, searches)
+        #print(interesting)
+        send_multiple_products_mail(interesting)
 
     return redirect(url_for('index'))
 
