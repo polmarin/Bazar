@@ -363,8 +363,10 @@ def get_interesting(product_data, price_data, searches):
         last_sales = []
         best_rated = []
         single_product = False
+        search_has_products = False
         for product in product_data:
             if product.search == name and product.asin != name:
+                search_has_products = True
                 if i == 0:
                     cheapest = product
                     biggest = product
@@ -390,26 +392,27 @@ def get_interesting(product_data, price_data, searches):
                     best_rated.append(product)
 
             elif product.asin == name:
+                search_has_products = True
                 single_product = True
                 cheapest = product
                 break
 
             i += 1
-
-        if not single_product:
-            biggest_sales.sort(key=lambda x: (x.last_price - x.prev_price), reverse=True)
-            #last_sales.sort(key=lambda x: x.last_price, reverse=True)
-            best_rated.sort(key=lambda x: x.rating, reverse=True)
-            products[name] = {
-                "Cheapest" : [cheapest],
-                "Biggest Affordable Sales" : biggest_sales[:4],
-                "Biggest Sale" : [biggest],
-                "Last Sales" : last_sales,
-                "Affordable Top Rated" : best_rated[:4]
-            }
-        else:
-            products[cheapest.name] = {
-                "" : [cheapest]
-            }
+        if search_has_products:
+            if not single_product:
+                biggest_sales.sort(key=lambda x: (x.last_price - x.prev_price), reverse=True)
+                #last_sales.sort(key=lambda x: x.last_price, reverse=True)
+                best_rated.sort(key=lambda x: x.rating, reverse=True)
+                products[name] = {
+                    "Cheapest" : [cheapest],
+                    "Biggest Affordable Sales" : biggest_sales[:4],
+                    "Biggest Sale" : [biggest],
+                    "Last Sales" : last_sales,
+                    "Affordable Top Rated" : best_rated[:4]
+                }
+            else:
+                products[cheapest.name] = {
+                    "" : [cheapest]
+                }
     return products
 
