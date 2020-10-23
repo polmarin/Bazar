@@ -390,6 +390,7 @@ def get_interesting(product_data, price_data, searches):
                         last_sales.append(product)
                 if product.rating >= 4 and product.last_price <= max_price:
                     best_rated.append(product)
+                i += 1
 
             elif product.asin == name:
                 search_has_products = True
@@ -397,7 +398,6 @@ def get_interesting(product_data, price_data, searches):
                 cheapest = product
                 break
 
-            i += 1
         if search_has_products:
             if not single_product:
                 biggest_sales.sort(key=lambda x: (x.last_price - x.prev_price), reverse=True)
@@ -415,4 +415,3 @@ def get_interesting(product_data, price_data, searches):
                     "" : [cheapest]
                 }
     return products
-
