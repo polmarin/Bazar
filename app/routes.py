@@ -4,7 +4,7 @@ from datetime import datetime
 import pytz
 from .forms import AddSearchForm
 from .models import Product, Price, Search
-from .utils.functions import scraper, send_mail, send_multiple_products_mail, send_no_products_mail, get_interesting 
+from .utils.functions import scraper, send_last_hour_mail, send_multiple_products_mail, send_no_products_mail, get_interesting 
 
 @app.route("/index")
 def home():
