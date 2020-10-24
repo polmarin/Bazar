@@ -289,30 +289,30 @@ def send_last_hour_mail(mail="12polmarin12@gmail.com"):
 
     for search in interesting:
         html += f"""
-                <br>
-                <h2 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF">{search}</h2>
-                <table style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
-                    <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;text-align: center">
-                        <th>Name</th>
-                        <th>Rating</th>
-                        <th>Original Price</th>
-                        <th>Last Price</th>
-                        <th>Actual Price</th>
-                    </tr>
-                    
+            <br>
+            <h2 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF">{search}</h2>
+            <table style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
+                <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;text-align: center">
+                    <th>Name</th>
+                    <th>Rating</th>
+                    <th>Original Price</th>
+                    <th>Last Price</th>
+                    <th>Actual Price</th>
+                </tr>
+                
+        """
+        for product in interesting[search]:
+            html += f"""
+                <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
+                    <td><a href="{product.link}">{product.name}</a></td>
+                    <td>{product[0].rating}</td>
+                    <td>{product[0].prev_price}</td>
+                    <td>{product[1]}€</td>
+                    <td>{product[0].last_price}€</td>
+                </tr>
             """
-            for product in interesting[search]:
-                html += f"""
-                    <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
-                        <td><a href="{product.link}">{product.name}</a></td>
-                        <td>{product[0].rating}</td>
-                        <td>{product[0].prev_price}</td>
-                        <td>{product[1]}€</td>
-                        <td>{product[0].last_price}€</td>
-                    </tr>
-                """
-            html += """
-                </table>
+        html += """
+            </table>
             """
     html += """
             </div>
