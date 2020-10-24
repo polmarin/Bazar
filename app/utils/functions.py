@@ -158,7 +158,7 @@ def scraper(d, searches):
 
     return products
 
-def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com", title = "Today's <i>juiciest</i>", subject = "Today's most interesting products"):
+def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com"):
     # MAIL CONFIG
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
@@ -171,7 +171,7 @@ def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com", ti
     you = mail
 
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = subject
+    msg['Subject'] = "Today's most interesting products"
     msg['From'] = me
     msg['To'] = you
 
@@ -182,7 +182,7 @@ def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com", ti
         </head>
         <body style="background-color: #101820FF;padding: 20px 10px; text-align:center">
             <div style="max-width:800px; margin:0 auto; text-align:center; font;color: #FEE715FF">
-                <h1 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF;text-align:center">{title}</h1>"""
+                <h1 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF;text-align:center">Today's <i>juiciest</i></h1>"""
 
     for search in interesting:
         html += f"""
@@ -261,7 +261,7 @@ def send_no_products_mail(mail = "12polmarin12@gmail.com"):
     server.quit()
     print("Sent")
 
-def send_mail(link, mail="12polmarin12@gmail.com", d_info = {}):
+def send_last_hour_mail(mail="12polmarin12@gmail.com"):
     # MAIL CONFIG
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
@@ -274,7 +274,7 @@ def send_mail(link, mail="12polmarin12@gmail.com", d_info = {}):
     you = mail
 
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = "EL TEU PRODUCTE HA BAIXAT DE PREU"
+    msg['Subject'] = "Price Drop"
     msg['From'] = me
     msg['To'] = you
 
@@ -285,26 +285,46 @@ def send_mail(link, mail="12polmarin12@gmail.com", d_info = {}):
         </head>
         <body style="background-color: #101820FF;padding: 20px 10px; text-align:center">
             <div style="max-width:800px; margin:0 auto; text-align:center; font;color: #FEE715FF">
-                <h1 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF;text-align:center">El producto que buscas ha bajado de precio</h1>
-                <p style="font-family : 'Cardo', serif;color: #FEE715FF;text-align:center">
-                    Hello darling. <br>
-                    Si has rebut això és perquè el producte que em vas demanar que vigilés ha baixat de preu per sota del limit que t'havies posat.
-                </p>
-                <a href='{link}' style="color:#101820FF; text-decoration: none">
-                    <h3 style="display: inline-block; font-family:'Oswald', sans-serif;text-align:center;background-color: #FEE715FF; border: 2px solid; box-shadow: 5px 10px white; padding:25px 10px">
-                        Fes click aquí i compra
-                    </h3>
-                </a>
+                <h1 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF;text-align:center">These prices changed within an hour</h1>"""
+
+    for search in interesting:
+        html += f"""
+                <br>
+                <h2 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF">{search}</h2>
+                <table style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
+                    <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;text-align: center">
+                        <th>Name</th>
+                        <th>Rating</th>
+                        <th>Original Price</th>
+                        <th>Last Price</th>
+                        <th>Actual Price</th>
+                    </tr>
+                    
+            """
+            for product in interesting[search]:
+                html += f"""
+                    <tr style="font-family:'Oswald', sans-serif; color: #FEE715FF;">
+                        <td><a href="{product.link}">{product.name}</a></td>
+                        <td>{product[0].rating}</td>
+                        <td>{product[0].prev_price}</td>
+                        <td>{product[1]}€</td>
+                        <td>{product[0].last_price}€</td>
+                    </tr>
+                """
+            html += """
+                </table>
+            """
+    html += """
             </div>
         </body>
     </html>
     """
-
     wholemsg = MIMEText(html, 'html')
     msg.attach(wholemsg)
     server.sendmail(me, you, msg.as_string())
     server.quit()
     print("Sent")
+
 
 def get_interesting(product_data, price_data, searches):
     """

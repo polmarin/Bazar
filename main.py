@@ -34,7 +34,7 @@ def search():
     print(products)
 
     """ UPDATE DATABASE """
-    dropped_prices = {}
+    dropped_prices = {} # { "search" : [( prod , preu), (prod , preu)] }
     for search in products:
         for product in products[search][:-1]:
 
@@ -57,9 +57,9 @@ def search():
                 update_data_product.rating = product.rating
                 if product.last_price < update_data_product.last_price:
                     if search not in dropped_prices:
-                        dropped_prices[search] = {"Price Drop Since Last Query": [product]}
+                        dropped_prices[search] = [(product, update_data_product.last_price)]
                     else:
-                        dropped_prices[search]["Price Drop Since Last Query"].append(product)
+                        dropped_prices[search].append((product, update_data_product.last_price))
                 update_data_product.last_price = product.last_price
 
             new_price = Price(asin, product.last_price, datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None))
@@ -68,7 +68,7 @@ def search():
 
 
     if dropped_prices != {}:
-        send_multiple_products_mail(dropped_prices, subject="Price Drop", title="These prices changed within an hour")
+        send_multiple_products_mail(dropped_prices)
 
 
 do = True
