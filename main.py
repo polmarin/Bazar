@@ -26,7 +26,7 @@ def search():
     
     """ SCRAPE DATA """
     products = {}
-    while products == {}:
+    while products == {} or len(products[list(products.keys())[0]]) <= 1:
         try:
             products = scraper(d, searches)
         except:
