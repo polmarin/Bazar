@@ -31,6 +31,7 @@ def search():
             products = scraper(d, searches)
         except:
             print("Error, trying to get products again")
+    print(products)
 
     """ UPDATE DATABASE """
     dropped_prices = {}
@@ -63,7 +64,7 @@ def search():
 
             new_price = Price(asin, product.last_price, datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None))
             db.session.add(new_price)
-        db.session.commit()
+            db.session.commit()
 
 
     if dropped_prices != {}:
