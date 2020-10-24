@@ -185,7 +185,7 @@ def scraper(d, searches):
 
     return products
 
-def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com"):
+def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com", title = "Today's <i>juiciest</i>", subject = "Today's most interesting products"):
     # MAIL CONFIG
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
@@ -198,7 +198,7 @@ def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com"):
     you = mail
 
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = "Today's most interesting products"
+    msg['Subject'] = subject
     msg['From'] = me
     msg['To'] = you
 
@@ -209,7 +209,7 @@ def send_multiple_products_mail(interesting, mail = "12polmarin12@gmail.com"):
         </head>
         <body style="background-color: #101820FF;padding: 20px 10px; text-align:center">
             <div style="max-width:800px; margin:0 auto; text-align:center; font;color: #FEE715FF">
-                <h1 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF;text-align:center">Today's <i>juiciest</i></h1>"""
+                <h1 style="font-family:'Oswald', sans-serif;text-transform:uppercase;color: #FEE715FF;text-align:center">{title}</h1>"""
 
     for search in interesting:
         html += f"""

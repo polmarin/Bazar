@@ -33,6 +33,7 @@ def search():
             print("Error, trying to get products again")
 
     """ UPDATE DATABASE """
+    dropped_prices = {}
     for search in products:
         for product in products[search][:-1]:
 
@@ -42,9 +43,9 @@ def search():
             if not exists: 
                 # PRODUCT NOT IN DATABASE
                 if product.rating != "":
-                    new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price, product.rating)
+                    new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.last_price, product.rating)
                 else:
-                    new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price)
+                    new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.last_price)
                 db.session.add(new_product)
                 db.session.commit()
             else:
@@ -53,19 +54,19 @@ def search():
                 update_data_product.link = product.link
                 update_data_product.name = product.name
                 update_data_product.rating = product.rating
-                update_data_product.last_price = product.price
-            
+                if product.last_price < update_data_product.last_price:
+                    if search not in dropped_prices:
+                        dropped_prices[search] = {"Price Drop Since Last Query": [product]}
+                    else:
+                        dropped_prices[search]["Price Drop Since Last Query"].append(product)
+                update_data_product.last_price = product.last_price
 
-            new_price = Price(asin, product.price, datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None))
+            new_price = Price(asin, product.last_price, datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None))
             db.session.add(new_price)
         db.session.commit()
 
 
-    product_data = Product.query.all()
-    price_data = Price.query.all()
-    searches = Search.query.all()
-    interesting = get_interesting(product_data, price_data, searches)
-    #print(interesting)
-    #send_multiple_products_mail(interesting)
+    if dropped_prices != {}:
+        send_multiple_products_mail(dropped_prices, subject="Price Drop", title="These prices changed within an hour")
 
 search()
