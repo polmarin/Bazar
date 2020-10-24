@@ -69,4 +69,12 @@ def search():
     if dropped_prices != {}:
         send_multiple_products_mail(dropped_prices, subject="Price Drop", title="These prices changed within an hour")
 
-search()
+
+do = True
+while do:
+    try:
+        search()
+        do = False
+    except:
+        print("PROBLEMS WITH SEARCH, TRYING AGAIN")
+        do = True # I don't need this here but it doesn't harm anybody

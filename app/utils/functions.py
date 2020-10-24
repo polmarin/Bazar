@@ -55,18 +55,6 @@ def scraper(d, searches):
     products = {}
 
     while search:
-        #chepest_product = Product("", "", "", "", "")
-        #best_deal_product = Product("", "", "", "", "")
-        """
-        if j < len(searches):
-            search_term = searches[j][0]
-            MAX_PRICE = searches[j][2]
-        else:
-            QUESTION_PRODUCT = "What are you looking for?\n:"
-            search_term = str(input(QUESTION_PRODUCT))
-            QUESTION_PRICE = "Which is the highest price you're willing to pay?\n:"
-            MAX_PRICE = float(input(QUESTION_PRICE))
-        """
         search_term = searches[j][0]
         MAX_PRICE = searches[j][2]
 
@@ -86,21 +74,6 @@ def scraper(d, searches):
         element.send_keys(Keys.ENTER)
 
         """ Get departments so the user can choose """
-        """
-        departments = driver.find_elements_by_xpath(
-            "//div[@id='departments']/ul/li")
-        categories = []
-        for cat in departments:
-            categories.append(cat.text)
-
-        if j < len(searches):
-            category = searches[j][1]
-        else:
-            MSG = "Which of these categories is your product in? " + \
-                str(categories)
-            category = str(input(MSG))
-        """
-
         category = searches[j][1]
         time.sleep(1)
         if category != "":
