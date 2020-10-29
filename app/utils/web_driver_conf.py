@@ -1,7 +1,7 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
-import os
+import os, logging
 
 os.environ["WDM_LOG_LEVEL"] = str(logging.WARNING)
 
@@ -13,9 +13,9 @@ CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
 def get_chrome_web_driver(options):
     try:
         #return webdriver.Chrome("chromedriver", chrome_options=options)
-        return webdriver.Chrome(ChromeDriverManager().install(), chrome_options = options)
+        return webdriver.Chrome(ChromeDriverManager().install(), chrome_options = options, service_log_path=os.devnull)
     except:
-        return webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options)
+        return webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=options, service_log_path=os.devnull)
         #return webdriver.Chrome(executable_path="/Users/polmarin/Documents/Coding/Python/Flask/buyCheap/app/utils/chromedriver", chrome_options=options)
 
 
@@ -27,7 +27,6 @@ def get_web_driver_options():
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--log-level=3")
-    chrome_options.add_argument("service_log_path='/dev/null'")
     return chrome_options
 
 
