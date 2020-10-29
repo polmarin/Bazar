@@ -36,6 +36,7 @@ def search():
                 print("ERROR scraping data:")
                 print("User: " + str(user.id) + "(" + user.email + ")")
                 print("Exception: " + str(e))
+                
 
         print(products)
 
