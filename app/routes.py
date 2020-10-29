@@ -17,7 +17,7 @@ def home():
 @login_required
 def index():
     print(current_user.id)
-    searches = Search.query.filter_by(user_id = current_user.id)
+    searches = Search.query.filter_by(user_id = current_user.id).all()
     search_terms = [s.name for s in searches] # List of search terms for current user
     product_data = Product.query.filter(Product.search.in_(search_terms)).all()
     prods = [p.asin for p in product_data] # List of ASIN for current user
@@ -41,11 +41,18 @@ def index():
 @app.route("/all-products")
 @login_required
 def show_all():
-    product_data = Product.query.all()
-    last = Price.query.order_by(Price.date.desc()).first()
+    searches = Search.query.filter_by(user_id = current_user.id).all()
+    search_terms = [s.name for s in searches] # List of search terms for current user
+    product_data = Product.query.filter(Product.search.in_(search_terms)).all()
+    prods = [p.asin for p in product_data] # List of ASIN for current user
+    last = Price.query.filter(Price.asin.in_(prods)).order_by(Price.date.desc()).first()
     now = datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None)
-    last_time = int((now - last.date).total_seconds() / 60)
-    num_prices = len(Price.query.all())
+
+    try:
+        last_time = int((now - last.date).total_seconds() / 60)
+    except: 
+        last_time = 0
+    num_prices = len(Price.query.filter(Price.asin.in_(prods)).all())
 
     return render_template("products.html", product_data=product_data, last_time = last_time, num_prices = num_prices)
 
@@ -124,19 +131,19 @@ def manage_search_terms():
             category = data["category"]
             max_price = data["max_price"]
             
-            exists = Search.query.filter_by(name = name).first() is not None
+            exists = Search.query.filter_by(name = name, user_id = current_user.id).first() is not None
             if not exists: 
-                new_search = Search(name, category, max_price)
+                new_search = Search(name, category, max_price, current_user.id)
                 db.session.add(new_search)
             elif exists:
-                update_data_search = Search.query.filter_by(name = name).first()
+                update_data_search = Search.query.filter_by(name = name, user_id = current_user.id).first()
                 if update_data_search.max_price != max_price:
                     update_data_search.max_price = max_price
 
             db.session.commit()
             return redirect(url_for("manage_search_terms"))
 
-    search_data = Search.query.all()
+    search_data = Search.query.filter_by(user_id = current_user.id).all()
 
     return render_template("searches.html", search_data = search_data, form = form)
 
@@ -164,7 +171,8 @@ def login():
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
-        return redirect(url_for(next_page))
+        #return redirect(url_for(next_page))
+        return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
 
 

@@ -325,7 +325,6 @@ def send_last_hour_mail(mail="12polmarin12@gmail.com"):
     server.quit()
     print("Sent")
 
-
 def get_interesting(product_data, price_data, searches):
     """
     Which are the best products?
