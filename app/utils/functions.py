@@ -43,6 +43,8 @@ def prettify_rating(rating):
     if rating != "":
         rating = rating.split(" de ")[0] # X,Y
         rating = float(rating.replace(",", "."))
+    else:
+        rating = 0
     return rating
 
 def scraper(d, searches):
