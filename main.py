@@ -1,4 +1,4 @@
-from app.models import Product, Price, Search
+from app.models import Product, Price, Search, User
 from app.utils.functions import scraper, send_last_hour_mail, send_multiple_products_mail, send_no_products_mail, get_interesting
 from app import app, db
 from datetime import datetime
