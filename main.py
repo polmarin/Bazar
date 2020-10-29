@@ -10,6 +10,7 @@ print("Hi")
 
 def search():
     for user in User.query.all():
+        print("User: " + str(user.id) + "(" + user.email + ")")
         """ GET STORED PRODUCTS """
         search_data = Search.query.filter_by(user_id = user.id).all()
         search_terms = [s.name for s in search_data] # List of search terms for current user
