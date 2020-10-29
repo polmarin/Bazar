@@ -2,6 +2,7 @@ from app.models import Product, Price, Search, User
 from app.utils.functions import scraper, send_last_hour_mail, send_multiple_products_mail, send_no_products_mail, get_interesting
 from app import app, db
 from datetime import datetime
+import time
 import pytz
 from app.utils.classes import Product as Prod
 
@@ -10,8 +11,8 @@ print("Hi")
 def search():
     for user in User.query.all():
         """ GET STORED PRODUCTS """
-        searches = Search.query.filter_by(user_id = user.id).all()
-        search_terms = [s.name for s in searches] # List of search terms for current user
+        search_data = Search.query.filter_by(user_id = user.id).all()
+        search_terms = [s.name for s in search_data] # List of search terms for current user
         product_data = Product.query.filter(Product.search.in_(search_terms)).all()
         d = {}
         for product in product_data:
@@ -22,7 +23,6 @@ def search():
                 d[product.search][product.asin] = prices[-1].price
 
         """ GET STORED SEARCH TERMS """
-        search_data = Search.query.all()
         searches = []
         for search in search_data:
             searches.append((search.name, search.category, search.max_price))

@@ -4,6 +4,17 @@
 <div class="py-5">
     <header class="container" >
         <h1>Add or Update a Search Term</h1>
+        <p>
+            How does this work?<br><br>
+            · If you're looking for a specific product, type the product's ASIN in the Search input, leave Category input blank and set your max price (in Euros). Example:<br>
+            Search: B006CZ0LGA<br>
+            Category: <br>
+            Max Price: 35<br><br>
+            · If you're looking for a certain type of product, but don't know yet which brand/model... Type the search term in the first input (just as you would type it in Amazon) and the category the product is in. Take into account that this runs in Amazon.es so, at least the category, should be in Spanish and exactly as shown in Amazon. Then set your max price (in euros). Example:<br>
+            Search: 21:9 monitor<br>
+            Category: Monitores<br>
+            Max Price: 400
+        </p>
         <form action="" method="post" novalidate>
             {{ form.hidden_tag() }}
             <p>

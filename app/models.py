@@ -22,7 +22,7 @@ class User(UserMixin, db.Model):
 class Product(db.Model):
     search = db.Column(db.String(100), db.ForeignKey('search.name'), nullable=False)
     asin = db.Column(db.String(30), nullable=False, primary_key = True)
-    link = db.Column(db.String(500), nullable=False)
+    link = db.Column(db.String(1000), nullable=False)
     name = db.Column(db.String(200), nullable=False)
     prev_price = db.Column(db.Float, nullable=False)
     last_price = db.Column(db.Float, nullable = False)
