@@ -31,16 +31,15 @@ def search():
         """ SCRAPE DATA """
         products = {}
         while products == {} or len(products[list(products.keys())[0]]) <= 1:
-            try:
-                products = scraper(d, search_list)
-            except Exception as e:
-                print("ERROR scraping data:")
-                print("User: " + str(user.id) + "(" + user.email + ")")
-                print("Exception: " + str(e))
-                print("--------------------- Restarting ---------------------")
-                time.sleep(2)
+            products = scraper(d, search_list)
 
-        print(products)
+            #print("ERROR scraping data:")
+            #print("User: " + str(user.id) + "(" + user.email + ")")
+            #print("Exception: " + str(e))
+            #print("--------------------- Restarting ---------------------")
+            time.sleep(2)
+
+        #print(products)
 
         """ UPDATE DATABASE """
         dropped_prices = {} # { "search" : [( prod , preu), (prod , preu)] }
