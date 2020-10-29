@@ -29,7 +29,7 @@ class Product(db.Model):
     rating = db.Column(db.Float, nullable = True)
 
     # A constructor function where we will pass the name and email of a user and it gets add as a new entry in the table.
-    def __init__(self, search, asin, link, name, prev_price, price, rating):
+    def __init__(self, search, asin, link, name, prev_price, price, rating = 0):
         self.search = search
         self.asin = asin
         self.link = link
