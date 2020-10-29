@@ -90,18 +90,26 @@ def scraper(d, searches):
         except:
             raise Exception("Couldn't get category")
         time.sleep(1)
+
         try:
-            if category != "":
+            expand = driver.find_element_by_xpath("//div[@id='departments']/ul/li/span/div/div/a[@data-action='a-expander-toggle']")
+            expand.click()
+        except:
+            print("Couldn't expand categories menu")
+        time.sleep(1)
+        categories = driver.find_element_by_xpath(("//div[@id='departments']/ul/li"))
+        categories = [cat.text for cat in categories]
+        if category != "":
+            if category in categories:
                 categoryElement = driver.find_element_by_xpath(
                     "//div[@id='departments']/ul/li/span/a/span[contains(text(), '" + category + "')]")
                 categoryElement.click()
-        except Exception as e:
-            #raise Exception("Couldn't click on category " + category + " for search " + search_term + "\n" + str(e))
-            print("Couldn't click on category " + category + " for search " + search_term)
-            if j >= len(searches):
-                search = False
-            j += 1
-            continue
+            else:
+                print("Couldn't click on category " + category + " for search " + search_term)
+                j += 1
+                if j >= len(searches):
+                    search = False
+                continue
 
         url = driver.current_url
         driver.get(url)
