@@ -77,6 +77,7 @@ while do:
     try:
         search()
         do = False
-    except:
+    except Exception as e:
         print("PROBLEMS WITH SEARCH, TRYING AGAIN")
+        print(e)
         do = True # I don't need this here but it doesn't harm anybody
