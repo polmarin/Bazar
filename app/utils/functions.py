@@ -55,6 +55,7 @@ def scraper(d, searches):
     products = {}
 
     while search:
+        cont = False
         search_term = searches[j][0]
         MAX_PRICE = searches[j][2]
 
@@ -88,6 +89,9 @@ def scraper(d, searches):
         finally:
             driver.close()
             j += 1
+            cont = True
+            
+        if cont:
             continue
         url = driver.current_url
         driver.get(url)
