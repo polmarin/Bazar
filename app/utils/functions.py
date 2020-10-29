@@ -56,8 +56,11 @@ def scraper(d, searches):
 
     while search:
         cont = False
-        search_term = searches[j][0]
-        MAX_PRICE = searches[j][2]
+        try:
+            search_term = searches[j][0]
+            MAX_PRICE = searches[j][2]
+        except:
+            raise Exception("Couldn't get search_term or MAX_PRICE")
 
         products[search_term] = []
         search_terms = search_term.split(" ")
@@ -77,7 +80,10 @@ def scraper(d, searches):
             raise Exception("Couldn't search for " + search_term + "\n" + str(e))
 
         """ Get departments so the user can choose """
-        category = searches[j][1]
+        try:
+            category = searches[j][1]
+        except:
+            raise Exception("Couldn't get category")
         time.sleep(1)
         try:
             if category != "":
@@ -90,7 +96,7 @@ def scraper(d, searches):
             driver.close()
             j += 1
             cont = True
-            
+
         if cont:
             continue
         url = driver.current_url
