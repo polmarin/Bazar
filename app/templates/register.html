@@ -6,39 +6,40 @@
         <div class="col-lg-10 col-10 mx-auto">
             <div class="card rounded shadow border-0">
                 <div class="card-body p-5 bg-white rounded">
-                    <h1>Register</h1>
-                    <p>ATTENTION: This is a project I created for fun and I haven't spent much time working on security. Please, do not use a personal password. Do use your preferred email though, because you'll be receiving information about your desired products just there.</p>
+                    <h1 class="display-4">Register</h1>
+                    <p class="lead mb-0">ATTENTION: This is a project I created for fun and I haven't spent much time working on security. Please, do not use a personal password. Do use your preferred email though, because you'll be receiving information about your desired products just there.</p>
                     <form action="" method="post">
                         {{ form.hidden_tag() }}
-                        <p>
+                       <p class="lead mb-0">
                             {{ form.username.label }}<br>
                             {{ form.username(size=32) }}<br>
                             {% for error in form.username.errors %}
                             <span style="color: red;">[{{ error }}]</span>
                             {% endfor %}
                         </p>
-                        <p>
+                       <p class="lead mb-0">
                             {{ form.email.label }}<br>
                             {{ form.email(size=64) }}<br>
                             {% for error in form.email.errors %}
                             <span style="color: red;">[{{ error }}]</span>
                             {% endfor %}
                         </p>
-                        <p>
+                       <p class="lead mb-0">
                             {{ form.password.label }}<br>
                             {{ form.password(size=32) }}<br>
                             {% for error in form.password.errors %}
                             <span style="color: red;">[{{ error }}]</span>
                             {% endfor %}
                         </p>
-                        <p>
+                       <p class="lead mb-0">
                             {{ form.password2.label }}<br>
                             {{ form.password2(size=32) }}<br>
                             {% for error in form.password2.errors %}
                             <span style="color: red;">[{{ error }}]</span>
                             {% endfor %}
                         </p>
-                        <p>{{ form.submit() }}</p>
+                        <br>
+                       <p>{{ form.submit() }}</p>
                     </form>
                 </div>
             </div>
