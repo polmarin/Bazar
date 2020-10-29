@@ -37,6 +37,7 @@ def search():
                 print("User: " + str(user.id) + "(" + user.email + ")")
                 print("Exception: " + str(e))
                 print("--------------------- Restarting ---------------------")
+                time.sleep(2)
 
         print(products)
 

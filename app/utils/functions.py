@@ -64,7 +64,7 @@ def scraper(d, searches):
         try:
             MAX_PRICE = searches[j][2]
         except:
-            raise Exception("Couldn't get MAX_PRICE")
+            raise Exception("Couldn't get MAX_PRICE for search " + search_term)
 
         products[search_term] = []
         search_terms = search_term.split(" ")
@@ -96,7 +96,6 @@ def scraper(d, searches):
                 categoryElement.click()
         except Exception as e:
             raise Exception("Couldn't click on category " + category + "\n" + str(e))
-        finally:
             driver.close()
             j += 1
             cont = True
