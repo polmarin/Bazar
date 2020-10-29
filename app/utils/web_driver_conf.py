@@ -1,6 +1,9 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
+import os
+
+os.environ["WDM_LOG_LEVEL"] = str(logging.WARNING)
 
 """ ONLY FOR HEROKU """
 GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google-chrome'
@@ -23,6 +26,7 @@ def get_web_driver_options():
     #chrome_options.binary_location = GOOGLE_CHROME_PATH
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--log-level=3")
     chrome_options.add_argument("service_log_path='/dev/null'")
     return chrome_options
 

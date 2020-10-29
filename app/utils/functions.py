@@ -55,7 +55,6 @@ def scraper(d, searches):
     products = {}
 
     while search:
-        cont = False
         try:
             search_term = searches[j][0]
         except:
@@ -99,6 +98,8 @@ def scraper(d, searches):
         except Exception as e:
             #raise Exception("Couldn't click on category " + category + " for search " + search_term + "\n" + str(e))
             print("Couldn't click on category " + category + " for search " + search_term)
+            if j >= len(searches):
+                search = False
             j += 1
             continue
 
