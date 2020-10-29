@@ -93,15 +93,15 @@ def scraper(d, searches):
             raise Exception("Couldn't get category")
         time.sleep(1)
 
-        try:
-            expand = driver.find_element_by_xpath("//div[@id='departments']/ul/li/span/div/a[@class='a-expander-header a-declarative a-expander-extend-header s-expander-text']")
-            expand.click()
-        except:
-            print("Couldn't expand categories menu")
-        time.sleep(1)
-        categories = driver.find_elements_by_xpath(("//div[@id='departments']/ul/li"))
-        categories = [cat.text for cat in categories]
         if category != "":
+            try:
+                expand = driver.find_element_by_xpath("//div[@id='departments']/ul/li/span/div/a[@class='a-expander-header a-declarative a-expander-extend-header s-expander-text']")
+                expand.click()
+            except:
+                print("Couldn't expand categories menu")
+            time.sleep(1)
+            categories = driver.find_elements_by_xpath(("//div[@id='departments']/ul/li"))
+            categories = [cat.text for cat in categories]
             if category in categories:
                 categoryElement = driver.find_element_by_xpath(
                     "//div[@id='departments']/ul/li/span/a/span[contains(text(), '" + category + "')]")
@@ -121,6 +121,7 @@ def scraper(d, searches):
         soup = BeautifulSoup(content, 'html.parser')
 
         for i in range(1, len(results)):
+            time.sleep(1)
             if category == "":
                 prod = soup.find('div', {"data-asin": search_term})
                 asin = search_term

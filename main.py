@@ -9,7 +9,9 @@ from app.utils.classes import Product as Prod
 print("Hi")
 
 def search():
+    
     for user in User.query.all():
+        time.sleep(2)
         print("User: " + str(user.id) + "(" + user.email + ")")
         """ GET STORED PRODUCTS """
         search_data = Search.query.filter_by(user_id = user.id).all()
@@ -40,6 +42,8 @@ def search():
             time.sleep(2)
 
         #print(products)
+
+        print("SCRAPED")
 
         """ UPDATE DATABASE """
         dropped_prices = {} # { "search" : [( prod , preu), (prod , preu)] }

@@ -1,6 +1,7 @@
 from app.models import Product, Price, Search, User
 from app.utils.functions import send_multiple_products_mail, get_interesting
 from app import app, db
+import time
 
 for user in User.query.all():
     searches = Search.query.filter_by(user_id = user.id).all()
