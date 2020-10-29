@@ -23,20 +23,20 @@ def search():
                 d[product.search][product.asin] = prices[-1].price
 
         """ GET STORED SEARCH TERMS """
-        searches = []
+        search_list = []
         for search in search_data:
-            searches.append((search.name, search.category, search.max_price))
+            search_list.append((search.name, search.category, search.max_price))
         
         """ SCRAPE DATA """
         products = {}
         while products == {} or len(products[list(products.keys())[0]]) <= 1:
             try:
-                products = scraper(d, searches)
+                products = scraper(d, search_list)
             except Exception as e:
                 print("ERROR scraping data:")
                 print("User: " + str(user.id) + "(" + user.email + ")")
                 print("Exception: " + str(e))
-                
+                print("--------------------- Restarting ---------------------")
 
         print(products)
 
