@@ -10,7 +10,9 @@ print("Hi")
 def search():
     for user in User.query.all():
         """ GET STORED PRODUCTS """
-        product_data = Product.query.filter_by(user_id = user.id).all()
+        searches = Search.query.filter_by(user_id = user.id).all()
+        search_terms = [s.name for s in searches] # List of search terms for current user
+        product_data = Product.query.filter(Product.search.in_(search_terms)).all()
         d = {}
         for product in product_data:
             prices = Price.query.filter_by(asin = product.asin).all()
@@ -80,4 +82,5 @@ while do:
     except Exception as e:
         print("PROBLEMS WITH SEARCH, TRYING AGAIN")
         print(e)
+        time.sleep(1)
         do = True # I don't need this here but it doesn't harm anybody
