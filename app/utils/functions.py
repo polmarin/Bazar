@@ -92,7 +92,7 @@ def scraper(d, searches):
         time.sleep(1)
 
         try:
-            expand = driver.find_element_by_xpath("//div[@id='departments']/ul/li/span/div/div/a[@data-action='a-expander-toggle']")
+            expand = driver.find_elements_by_xpath("//div[@id='departments']/ul/li/span/div/div/a[@data-action='a-expander-toggle']")
             expand.click()
         except:
             print("Couldn't expand categories menu")
