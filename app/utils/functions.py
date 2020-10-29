@@ -95,13 +95,10 @@ def scraper(d, searches):
                     "//div[@id='departments']/ul/li/span/a/span[contains(text(), '" + category + "')]")
                 categoryElement.click()
         except Exception as e:
-            raise Exception("Couldn't click on category " + category + "\n" + str(e))
-            driver.close()
+            #raise Exception("Couldn't click on category " + category + " for search " + search_term + "\n" + str(e))
             j += 1
-            cont = True
-
-        if cont:
             continue
+            
         url = driver.current_url
         driver.get(url)
         results = driver.find_elements_by_xpath(
