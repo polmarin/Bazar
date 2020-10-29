@@ -55,106 +55,109 @@ def scraper(d, searches):
     products = {}
 
     while search:
-        search_term = searches[j][0]
-        MAX_PRICE = searches[j][2]
+        try:
+            search_term = searches[j][0]
+            MAX_PRICE = searches[j][2]
 
-        products[search_term] = []
-        search_terms = search_term.split(" ")
+            products[search_term] = []
+            search_terms = search_term.split(" ")
 
-        options = get_web_driver_options()
-        # set_automation_as_head_less(options)
-        set_ignore_console_messages(options)
-        set_browser_as_incognito(options)
-        driver = get_chrome_web_driver(options)
+            options = get_web_driver_options()
+            # set_automation_as_head_less(options)
+            set_ignore_console_messages(options)
+            set_browser_as_incognito(options)
+            driver = get_chrome_web_driver(options)
 
-        driver.get(URL)
-        element = driver.find_element_by_xpath(
-            '//*[@id="twotabsearchtextbox"]')
-        element.send_keys(search_term)
-        element.send_keys(Keys.ENTER)
+            driver.get(URL)
+            element = driver.find_element_by_xpath(
+                '//*[@id="twotabsearchtextbox"]')
+            element.send_keys(search_term)
+            element.send_keys(Keys.ENTER)
 
-        """ Get departments so the user can choose """
-        category = searches[j][1]
-        time.sleep(1)
-        if category != "":
-            categoryElement = driver.find_element_by_xpath(
-                "//div[@id='departments']/ul/li/span/a/span[contains(text(), '" + category + "')]")
-            categoryElement.click()
+            """ Get departments so the user can choose """
+            category = searches[j][1]
+            time.sleep(1)
+            if category != "":
+                categoryElement = driver.find_element_by_xpath(
+                    "//div[@id='departments']/ul/li/span/a/span[contains(text(), '" + category + "')]")
+                categoryElement.click()
 
-        url = driver.current_url
-        driver.get(url)
-        results = driver.find_elements_by_xpath(
-            "//*[@class='s-main-slot s-result-list s-search-results sg-row']/div")
-        content = driver.page_source
-        soup = BeautifulSoup(content, 'html.parser')
+            url = driver.current_url
+            driver.get(url)
+            results = driver.find_elements_by_xpath(
+                "//*[@class='s-main-slot s-result-list s-search-results sg-row']/div")
+            content = driver.page_source
+            soup = BeautifulSoup(content, 'html.parser')
 
-        for i in range(1, len(results)):
-            if category == "":
-                prod = soup.find('div', {"data-asin": search_term})
-                asin = search_term
-            else:
-                prod = soup.find('div', {"data-index": str(i)})
-                asin = prod.get('data-asin')
-            h2 = prod.find('h2')
-            should_add = True
-            price = prod.find('span', {'class': 'a-price'})
-            prev_price = prod.find('span', {'class': 'a-price a-text-price'})
-            try:
-                rating = prod.find('div', {'class' : 'a-section a-spacing-none a-spacing-top-micro'}).find('div', {'class' : 'a-row a-size-small'}).find('span').get('aria-label')
-            except:
-                rating = ""
-            
-            rating = prettify_rating(rating)
+            for i in range(1, len(results)):
+                if category == "":
+                    prod = soup.find('div', {"data-asin": search_term})
+                    asin = search_term
+                else:
+                    prod = soup.find('div', {"data-index": str(i)})
+                    asin = prod.get('data-asin')
+                h2 = prod.find('h2')
+                should_add = True
+                price = prod.find('span', {'class': 'a-price'})
+                prev_price = prod.find('span', {'class': 'a-price a-text-price'})
+                try:
+                    rating = prod.find('div', {'class' : 'a-section a-spacing-none a-spacing-top-micro'}).find('div', {'class' : 'a-row a-size-small'}).find('span').get('aria-label')
+                except:
+                    rating = ""
+                
+                rating = prettify_rating(rating)
 
-            try:
-                if prev_price is None:
-                    prev_price = price
+                try:
+                    if prev_price is None:
+                        prev_price = price
 
-                name = h2.get_text().strip()
-                price = price.get_text()
-                prev_price = prev_price.get_text()
-                link = 'https://www.amazon.es' + h2.find('a').get("href")
+                    name = h2.get_text().strip()
+                    price = price.get_text()
+                    prev_price = prev_price.get_text()
+                    link = 'https://www.amazon.es' + h2.find('a').get("href")
 
-                product = Product(
-                    str(asin), 
-                    name, 
-                    convert_price_toNumber(price), 
-                    convert_price_toNumber(prev_price), 
-                    link,
-                    rating
-                )
+                    product = Product(
+                        str(asin), 
+                        name, 
+                        convert_price_toNumber(price), 
+                        convert_price_toNumber(prev_price), 
+                        link,
+                        rating
+                    )
 
-                if searches[j][0] != asin:  # If the search term isn't the ASIN
-                    for word in search_terms:
-                        if word.lower() not in name.lower():
-                            should_add = False
+                    if searches[j][0] != asin:  # If the search term isn't the ASIN
+                        for word in search_terms:
+                            if word.lower() not in name.lower():
+                                should_add = False
 
-                # if product.price > MAX_PRICE:
-                #    should_add = False
+                    # if product.price > MAX_PRICE:
+                    #    should_add = False
 
-            except Exception as e:
-                #print(e)
-                should_add = False
- 
-            if should_add:
-                # print(product)
-                products[search_term].append(product)
-            
-            if asin == search_term:
-                break
-        driver.close()
-        products[search_term].append(MAX_PRICE)
-        j += 1
+                except Exception as e:
+                    #print(e)
+                    should_add = False
+    
+                if should_add:
+                    # print(product)
+                    products[search_term].append(product)
+                
+                if asin == search_term:
+                    break
+            driver.close()
+            products[search_term].append(MAX_PRICE)
+            j += 1
 
-        if j >= len(searches):
-            search = False
-        """
-        if j >= len(searches):
-            cont = input(
-                "If you want to search for more products, type 1, else otherwise: ")
-            if cont != "1":
+            if j >= len(searches):
                 search = False
-        """
+            """
+            if j >= len(searches):
+                cont = input(
+                    "If you want to search for more products, type 1, else otherwise: ")
+                if cont != "1":
+                    search = False
+            """
+        except Exception as e:
+            raise Exception(search_term + str(e))
 
     return products
 

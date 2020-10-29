@@ -32,8 +32,11 @@ def search():
         while products == {} or len(products[list(products.keys())[0]]) <= 1:
             try:
                 products = scraper(d, searches)
-            except:
-                print("Error, trying to get products again")
+            except Exception as e:
+                print("ERROR scraping data:")
+                print("User: " + str(user.id) + "(" + user.email + ")")
+                print("Exception: " + str(e))
+
         print(products)
 
         """ UPDATE DATABASE """
