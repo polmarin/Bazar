@@ -58,9 +58,13 @@ def scraper(d, searches):
         cont = False
         try:
             search_term = searches[j][0]
+        except:
+            raise Exception("Couldn't get search_term")
+
+        try:
             MAX_PRICE = searches[j][2]
         except:
-            raise Exception("Couldn't get search_term or MAX_PRICE")
+            raise Exception("Couldn't get MAX_PRICE")
 
         products[search_term] = []
         search_terms = search_term.split(" ")
