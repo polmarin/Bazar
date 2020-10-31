@@ -403,7 +403,7 @@ def get_interesting(product_data, price_data, searches):
                         prices.append(price)
 
                 if len(prices) >= 24:
-                    if prices[-3].price > prices[-1].price: # Change to -24
+                    if prices[-24].price > prices[-1].price: # Change to -24
                         last_sales.append(product)
                 else:
                     if prices[0].price > prices[-1].price:
