@@ -69,6 +69,7 @@ def search():
                         update_data_product.name = product.name
                         update_data_product.rating = product.rating
                         if product.last_price < update_data_product.last_price:
+                            print("Price drop")
                             if search not in dropped_prices:
                                 dropped_prices[search] = [(product, update_data_product.last_price)]
                             else:
@@ -81,6 +82,7 @@ def search():
 
 
         if dropped_prices != {}:
+            print(user.mail + " should receive a mail with the products that just drpped their price.")
             send_multiple_products_mail(dropped_prices, mail = user.email)
 
 
