@@ -31,7 +31,7 @@ def index():
     except: 
         last_time = 0
 
-    interesting = get_interesting(product_data, price_data, searches)
+    interesting, send = get_interesting(product_data, price_data, searches)
 
     # passes user_data variable into the index.html file.
     #return render_template("index.html", product_data=product_data, last_time = last_time)
@@ -113,7 +113,7 @@ def search():
         product_data = Product.query.all()
         price_data = Price.query.all()
         searches = Search.query.all()
-        interesting = get_interesting(product_data, price_data, searches)
+        interesting, send = get_interesting(product_data, price_data, searches)
         #print(interesting)
         send_multiple_products_mail(interesting)
 
