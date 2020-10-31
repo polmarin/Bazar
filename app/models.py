@@ -20,7 +20,7 @@ class User(UserMixin, db.Model):
         return '<User {}>'.format(self.username) 
 
 class Product(db.Model):
-    search = db.Column(db.String(100), db.ForeignKey('search.name'), nullable=False)
+    search = db.Column(db.String(100), db.ForeignKey('search.name', ondelete="cascade"), nullable=False)
     asin = db.Column(db.String(30), nullable=False, primary_key = True)
     link = db.Column(db.String(1000), nullable=False)
     name = db.Column(db.String(200), nullable=False)
@@ -43,7 +43,7 @@ class Product(db.Model):
 
 class Price(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    asin = db.Column(db.String(30), db.ForeignKey('product.asin'),
+    asin = db.Column(db.String(30), db.ForeignKey('product.asin', ondelete="cascade"),
         nullable=False)
     price = db.Column(db.Float, nullable = False)
     default = datetime.now(pytz.timezone("Europe/Madrid"))
@@ -60,7 +60,7 @@ class Search(db.Model):
     name = db.Column(db.String(100), nullable = False, unique=True)
     category = db.Column(db.String(100), nullable = False)
     max_price = db.Column(db.Float, nullable = False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), default=0)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="cascade"), default=0)
 
     def __init__(self, name, cat, max_price, user):
         self.name = name

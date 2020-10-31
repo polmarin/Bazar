@@ -21,6 +21,7 @@ def upgrade():
     #op.create_foreign_key(None, 'search', 'user', ['user_id'], ['id'])
     #op.drop_column('search', 'user')
     # ### end Alembic commands ###
+    pass
 
 
 def downgrade():
