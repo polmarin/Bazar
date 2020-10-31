@@ -104,7 +104,7 @@ def scraper(d, searches):
             categories = [cat.text for cat in categories]
             if category in categories:
                 categoryElement = driver.find_element_by_xpath(
-                    "//div[@id='departments']/ul/li/span/a/span[contains(text(), '" + category + "')]")
+                    "//div[@id='departments']/ul/li/span/a/span[text() = '" + category + "']")
                 categoryElement.click()
             else:
                 print("Couldn't click on category " + category + " for search " + search_term)
@@ -352,6 +352,7 @@ def send_last_hour_mail(mail="12polmarin12@gmail.com"):
     print("Sent")
 
 def get_interesting(product_data, price_data, searches):
+    send = False
     """
     Which are the best products?
         - The cheapest one
@@ -384,6 +385,7 @@ def get_interesting(product_data, price_data, searches):
         search_has_products = False
         for product in product_data:
             if product.search == name and product.asin != name:
+                send = True
                 search_has_products = True
                 if i == 0:
                     cheapest = product
@@ -432,4 +434,4 @@ def get_interesting(product_data, price_data, searches):
                 products[cheapest.name] = {
                     "" : [cheapest]
                 }
-    return products
+    return products, send

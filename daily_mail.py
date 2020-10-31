@@ -10,7 +10,8 @@ for user in User.query.all():
     prods = [p.asin for p in product_data] # List of ASIN for current user
     price_data = Price.query.all()
 
-    interesting = get_interesting(product_data, price_data, searches)
+    interesting, send = get_interesting(product_data, price_data, searches)
     #print(interesting)
-    send_multiple_products_mail(interesting, mail = user.email)
+    if send:
+        send_multiple_products_mail(interesting, mail = user.email)
     time.sleep(5)
