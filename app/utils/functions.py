@@ -189,7 +189,7 @@ def scraper(d, searches):
             if asin == search_term:
                 break
         driver.close()
-        products[search_term].append(MAX_PRICE, MIN_PRICE)
+        products[search_term].append((MAX_PRICE, MIN_PRICE))
         j += 1
 
         if j >= len(searches):
