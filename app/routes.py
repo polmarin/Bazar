@@ -128,10 +128,10 @@ def manage_search_terms():
         if form.validate_on_submit():
             data = request.form
             name = data["name"]
-            category = data["category"]
+            category = data["category"] or ''
             max_price = data["max_price"]
-            min_price = data["min_price"]
-            black_list = data["black_list"]
+            min_price = data["min_price"] or 0
+            black_list = data["black_list"] or ''
             
             exists = Search.query.filter_by(name = name, user_id = current_user.id).first() is not None
             if not exists: 
