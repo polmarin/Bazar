@@ -402,12 +402,13 @@ def get_interesting(product_data, price_data, searches):
                     if price.asin == product.asin:
                         prices.append(price)
 
-                if len(prices) >= 24:
-                    if prices[-24].price > prices[-1].price: # Change to -24
+                if len(prices) >= 4:
+                    if prices[-4].price > prices[-1].price: # Change to -4
                         last_sales.append(product)
-                else:
+                elif len(prices) >= 1:
                     if prices[0].price > prices[-1].price:
                         last_sales.append(product)
+                        
                 if product.rating >= 4 and product.last_price <= max_price:
                     best_rated.append(product)
                 i += 1
