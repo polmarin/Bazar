@@ -67,6 +67,16 @@ def scraper(d, searches):
         except:
             raise Exception("Couldn't get MAX_PRICE for search " + search_term)
 
+        try:
+            MIN_PRICE = searches[j][3]
+        except:
+            raise Exception("Couldn't get MIN_PRICE for search " + search_term)
+        
+        try:
+            BLACK_LIST = searches[j][4].split(",")
+        except:
+            raise Exception("Couldn't get BLACK_LIST for search " + search_term)
+
         print("Search: " + search_term)
 
         products[search_term] = []
@@ -161,6 +171,9 @@ def scraper(d, searches):
                     for word in search_terms:
                         if word.lower() not in name.lower():
                             should_add = False
+                    for black_term in BLACK_LIST:
+                        if black_term.lower() in name.lower():
+                            should_add = False
 
                 # if product.price > MAX_PRICE:
                 #    should_add = False
@@ -176,7 +189,7 @@ def scraper(d, searches):
             if asin == search_term:
                 break
         driver.close()
-        products[search_term].append(MAX_PRICE)
+        products[search_term].append(MAX_PRICE, MIN_PRICE)
         j += 1
 
         if j >= len(searches):
@@ -376,6 +389,7 @@ def get_interesting(product_data, price_data, searches):
     for search in searches:
         name = search.name
         max_price = search.max_price
+        min_price = search.min_price
 
         i = 0
         biggest_sales = [] # Order in the end
@@ -408,7 +422,7 @@ def get_interesting(product_data, price_data, searches):
                 elif len(prices) >= 1:
                     if prices[0].price > prices[-1].price:
                         last_sales.append(product)
-                        
+
                 if product.rating >= 4 and product.last_price <= max_price:
                     best_rated.append(product)
                 i += 1

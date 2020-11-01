@@ -34,6 +34,14 @@
                             {{ form.max_price.label }}<br>
                             {{ form.max_price }}
                         </p><br>
+                        <p class="lead mb-0">
+                            {{ form.min_price.label }}<br>
+                            {{ form.min_price }}
+                        </p><br>
+                        <p class="lead mb-0">
+                            {{ form.black_list.label }} <span style="color:gray">(separated by commas)</span><br>
+                            {{ form.black_list }}
+                        </p><br>
                         <p>{{ form.submit() }}</p>
                     </form>
                     <br><br>
@@ -44,6 +52,8 @@
                                     <th>Search Term</th>
                                     <th>Category</th>
                                     <th>Max Price</th>
+                                    <th>Min Price</th>
+                                    <th>Black List</th>
                                     <th>Delete?</th>
                                 </tr>
                             </thead>
@@ -53,6 +63,8 @@
                                     <td>{{search.name}}</td>
                                     <td>{{search.category}}</td>
                                     <td>{{search.max_price}}€</td>
+                                    <td>{{search.min_price}}€</td>
+                                    <td>{{search.black_list}}</td>
                                     <td style="text-align:center"><a href="{{ url_for('delete_search_term') }}?id={{search.id}}"><i class="far fa-trash-alt"></i></a></td>
                                 </tr>
                                 {% endfor %}

@@ -28,11 +28,11 @@ def search():
         """ GET STORED SEARCH TERMS """
         search_list = []
         for search in search_data:
-            search_list.append((search.name, search.category, search.max_price))
+            search_list.append((search.name, search.category, search.max_price, search.min_price, search.black_list))
         
         """ SCRAPE DATA """
         products = {}
-        while products == {} or len(products[list(products.keys())[0]]) <= 1:
+        while products == {} or len(products[list(products.keys())[0]]) <= 2:
             products = scraper(d, search_list)
 
             #print("ERROR scraping data:")
@@ -48,7 +48,7 @@ def search():
         """ UPDATE DATABASE """
         dropped_prices = {} # { "search" : [( prod , preu), (prod , preu)] }
         for search in products:
-            for product in products[search][:-1]:
+            for product in products[search][:-2]:
 
                 asin = product.asin
                 if asin != "":

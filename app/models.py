@@ -71,7 +71,7 @@ class Search(db.Model):
         self.max_price = max_price
         self.user_id = user
         self.min_price = min_price
-        self.black_list = black_list.split(",")
+        self.black_list = black_list
 
 
 

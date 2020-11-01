@@ -130,15 +130,21 @@ def manage_search_terms():
             name = data["name"]
             category = data["category"]
             max_price = data["max_price"]
+            min_price = data["min_price"]
+            black_list = data["black_list"]
             
             exists = Search.query.filter_by(name = name, user_id = current_user.id).first() is not None
             if not exists: 
-                new_search = Search(name, category, max_price, current_user.id)
+                new_search = Search(name, category, max_price, current_user.id, min_price, black_list)
                 db.session.add(new_search)
             elif exists:
                 update_data_search = Search.query.filter_by(name = name, user_id = current_user.id).first()
                 if update_data_search.max_price != max_price:
                     update_data_search.max_price = max_price
+                if update_data_search.min_price != min_price:
+                    update_data_search.min_price = min_price
+                if update_data_search.black_list != black_list:
+                    update_data_search.black_list = black_list
 
             db.session.commit()
             return redirect(url_for("manage_search_terms"))
