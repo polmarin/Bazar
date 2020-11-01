@@ -60,13 +60,18 @@ class Search(db.Model):
     name = db.Column(db.String(100), nullable = False, unique=True)
     category = db.Column(db.String(100), nullable = False)
     max_price = db.Column(db.Float, nullable = False)
+    min_price = db.Column(db.Float, nullable=True, default = 0)
+    black_list = db.Column(db.String(500), nullable=True, default = "")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="cascade"), default=0)
 
-    def __init__(self, name, cat, max_price, user):
+
+    def __init__(self, name, cat, max_price, user, min_price, black_list):
         self.name = name
         self.category = cat
         self.max_price = max_price
         self.user_id = user
+        self.min_price = min_price
+        self.black_list = black_list.split(",")
 
 
 
