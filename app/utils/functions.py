@@ -300,7 +300,7 @@ def send_no_products_mail(mail = "12polmarin12@gmail.com"):
     server.quit()
     print("Sent")
 
-def send_last_hour_mail(mail="12polmarin12@gmail.com"):
+def send_last_hour_mail(interesting, mail="12polmarin12@gmail.com"):
     # MAIL CONFIG
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()

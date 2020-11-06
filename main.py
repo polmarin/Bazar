@@ -83,7 +83,7 @@ def search():
 
         if dropped_prices != {}:
             print(user.email + " should receive a mail with the products that just drpped their price.")
-            send_multiple_products_mail(dropped_prices, mail = user.email)
+            send_last_hour_mail(dropped_prices, mail = user.email)
 
 
 do = True
