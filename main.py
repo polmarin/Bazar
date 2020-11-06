@@ -82,7 +82,7 @@ def search():
 
 
         if dropped_prices != {}:
-            print(user.mail + " should receive a mail with the products that just drpped their price.")
+            print(user.email + " should receive a mail with the products that just drpped their price.")
             send_multiple_products_mail(dropped_prices, mail = user.email)
 
 
