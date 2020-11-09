@@ -18,12 +18,13 @@ def search():
         search_terms = [s.name for s in search_data] # List of search terms for current user
         product_data = Product.query.filter(Product.search.in_(search_terms)).all()
         d = {}
-        for product in product_data:
-            prices = Price.query.filter_by(asin = product.asin).all()
-            if product.search not in d:
-                d[product.search] = {product.asin : prices[-1].price}
-            else:
-                d[product.search][product.asin] = prices[-1].price
+        if product_data != []:
+            for product in product_data:
+                prices = Price.query.filter_by(asin = product.asin).all()
+                if product.search not in d:
+                    d[product.search] = {product.asin : prices[-1].price}
+                else:
+                    d[product.search][product.asin] = prices[-1].price
 
         """ GET STORED SEARCH TERMS """
         search_list = []
@@ -32,7 +33,7 @@ def search():
         
         """ SCRAPE DATA """
         products = {}
-        while products == {} or len(products[list(products.keys())[0]]) <= 2:
+        while products == {} or len(products[list(products.keys())[0]]) <= 1:
             products = scraper(d, search_list)
 
             #print("ERROR scraping data:")
@@ -41,16 +42,18 @@ def search():
             #print("--------------------- Restarting ---------------------")
             time.sleep(2)
 
-        #print(products)
+        print(products)
 
         print("SCRAPED")
 
         """ UPDATE DATABASE """
         dropped_prices = {} # { "search" : [( prod , preu), (prod , preu)] }
         for search in products:
-            for product in products[search][:-2]:
+            for product in products[search][:-1]:
 
                 asin = product.asin
+                print("----------------")
+                print(asin)
                 if asin != "":
                     exists = Product.query.filter_by(asin = asin).first() is not None
 
@@ -60,8 +63,10 @@ def search():
                             new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.last_price, product.rating)
                         else:
                             new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.last_price)
+                        print(product)
                         db.session.add(new_product)
                         db.session.commit()
+                        print("Added!")
                     else:
                         # PRODUCT ALREADY IN DATABASE
                         update_data_product = Product.query.filter_by(asin = asin).first()

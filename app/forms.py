@@ -7,7 +7,7 @@ class AddSearchForm(FlaskForm):
     name = StringField('Search', validators=[DataRequired()])
     category = StringField('Category')
     max_price = FloatField('Max Price', validators=[DataRequired()])
-    min_price = FloatField('Min Price')
+    min_price = FloatField('Min Price', default=0)
     black_list = StringField('Black List')
     submit = SubmitField('Confirm')
 

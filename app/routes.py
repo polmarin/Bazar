@@ -19,6 +19,7 @@ def index():
     print(current_user.id)
     searches = Search.query.filter_by(user_id = current_user.id).all()
     search_terms = [s.name for s in searches] # List of search terms for current user
+    print(search_terms)
     product_data = Product.query.filter(Product.search.in_(search_terms)).all()
     prods = [p.asin for p in product_data] # List of ASIN for current user
 
@@ -56,70 +57,6 @@ def show_all():
 
     return render_template("products.html", product_data=product_data, last_time = last_time, num_prices = num_prices)
 
-@app.route("/search", methods=["GET", "POST"])
-def search():
-    if request.method == 'GET':
-        product_data = Product.query.all()
-        d = {}
-        for product in product_data:
-            prices = Price.query.filter_by(asin = product.asin).all()
-            if product.search not in d:
-                d[product.search] = {product.asin : prices[-1].price}
-            else:
-                d[product.search][product.asin] = prices[-1].price
-
-        search_data = Search.query.all()
-        searches = []
-        for search in search_data:
-            searches.append((search.name, search.category, search.max_price))
-
-        """ SCRAPE DATA """
-        products = {}
-        while products == {}:
-            try:
-                products = scraper(d, searches)
-            except:
-                print("Error, trying to get products again")
-
-        """ UPDATE DATABASE """
-        for search in products:
-            for product in products[search][:-1]:
-
-                asin = product.asin
-                exists = Product.query.filter_by(asin = asin).first() is not None
-
-                if not exists: 
-                    # PRODUCT NOT IN DATABASE
-                    if product.rating != "":
-                        new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price, product.rating)
-                    else:
-                        new_product = Product(search, product.asin, product.link, product.name, product.prev_price, product.price)
-                    db.session.add(new_product)
-                    db.session.commit()
-                else:
-                    # PRODUCT ALREADY IN DATABASE
-                    update_data_product = Product.query.filter_by(asin = asin).first()
-                    update_data_product.link = product.link
-                    update_data_product.name = product.name
-                    update_data_product.rating = product.rating
-                    update_data_product.last_price = product.price
-                
-
-                new_price = Price(asin, product.price, datetime.now(pytz.timezone("Europe/Madrid")).replace(tzinfo=None))
-                db.session.add(new_price)
-            db.session.commit()
-
-
-        product_data = Product.query.all()
-        price_data = Price.query.all()
-        searches = Search.query.all()
-        interesting, send = get_interesting(product_data, price_data, searches)
-        #print(interesting)
-        send_multiple_products_mail(interesting)
-
-    return redirect(url_for('index'))
-
-
 @app.route("/manage-search-terms", methods=["GET", "POST"])
 @login_required
 def manage_search_terms():
@@ -148,6 +85,8 @@ def manage_search_terms():
 
             db.session.commit()
             return redirect(url_for("manage_search_terms"))
+        else:
+            print("Error validating")
 
     search_data = Search.query.filter_by(user_id = current_user.id).all()
 

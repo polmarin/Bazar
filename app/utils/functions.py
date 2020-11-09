@@ -49,6 +49,8 @@ def prettify_rating(rating):
 
 def scraper(d, searches):
 
+    print(len(searches))
+
     URL = "https://www.amazon.es"
     NUMBER_OF_PAGES_TO_SEARCH = 1
 
@@ -179,7 +181,7 @@ def scraper(d, searches):
                 #    should_add = False
 
             except Exception as e:
-                #print(e)
+                print(e)
                 should_add = False
 
             if should_add:
@@ -191,8 +193,10 @@ def scraper(d, searches):
         driver.close()
         products[search_term].append((MAX_PRICE, MIN_PRICE))
         j += 1
+        print(j)
 
         if j >= len(searches):
+            print("Stopping search")
             search = False
 
     return products
@@ -366,6 +370,7 @@ def send_last_hour_mail(interesting, mail="12polmarin12@gmail.com"):
 
 def get_interesting(product_data, price_data, searches):
     send = False
+    print(product_data)
     """
     Which are the best products?
         - The cheapest one
@@ -445,7 +450,11 @@ def get_interesting(product_data, price_data, searches):
                     "Last Sales" : last_sales,
                     "Affordable Top Rated" : best_rated[:4]
                 }
+                print("General search")
+                print(name)
             else:
+                print("Single product")
+                print(cheapest.name, cheapest)
                 products[cheapest.name] = {
                     "" : [cheapest]
                 }
